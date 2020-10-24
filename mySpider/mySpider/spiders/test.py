@@ -7,7 +7,7 @@ class TestSpider(scrapy.Spider):
     # start_urls = ['https://news.uestc.edu.cn/']
 
     start_urls = [
-        'https://news.uestc.edu.cn/?n = UestcNews.Front.Category.Page&CatId=42',
+        'https://news.uestc.edu.cn/?n=UestcNews.Front.Category.Page&CatId=42',
         'https://news.uestc.edu.cn/?n=UestcNews.Front.Category.Page&CatId=50',
         'https://news.uestc.edu.cn/?n=UestcNews.Front.Category.Page&CatId=43',
         'https://news.uestc.edu.cn/?n=UestcNews.Front.Category.Page&CatId=44',
@@ -18,16 +18,25 @@ class TestSpider(scrapy.Spider):
         'https://news.uestc.edu.cn/?n=UestcNews.Front.Category.Page&CatId=51',
         'https://news.uestc.edu.cn/?n=UestcNews.Front.Category.Page&CatId=47',
         'https://news.uestc.edu.cn/?n=UestcNews.Front.Category.Page&CatId=15735'
-    ]
+    ]#爬取目标网页
 
     def parse(self, response):
         #处理 start_urls的地址，并获得数据（剪切好数据）
         # ret1 = response.xpath("//div[id='Degas_news_list']").extract()
 
         # 该返回类型不是列表类型，是特殊列表类型
-        li_list = response.xpath("//div[@id='Degas_wrap']//li").extract()
-        # print(li_list)
-        print(len(li_list))
+        titles = response.xpath("//div[@id='Degas_news_list']//ul//li//h3//a/text()").extract()
+        # 获取标题
+        contents = response.xpath("//div[@id='Degas_news_list']//ul//li//h3//a/@href").extract()
+        #获取内容网址
+        next_page = response.xpath("//div[@class='page_div']//ul[@class='pagination']//li[@class='move-page ']//a").extract()
+        #获取下一页网址
+        # info = li_list[0].xpath('string(.)')
+        # print(next_page)
+        # print(info)
+        # print(titles)
+        print(contents)
+
 
         # for li in li_list:
         #     item ={}
