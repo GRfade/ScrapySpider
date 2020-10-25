@@ -29,17 +29,30 @@ class UestcSpider(scrapy.Spider):
         # titles = response.xpath("//div[@id='Degas_news_list']//ul//li//h3//a/text()").extract()
         # contents = response.xpath("//div[@id='Degas_news_list']//ul//li//h3//a/@href").extract()
         # next_page = response.xpath("//div[@id='Degas_news_list']//div[@class='page_div']//ul[@class='pagination']//li[@class='move-page ']//a").extract()
-
+        # item = MyspiderItem()
+        item = {}
         for list in url:
-            # item['titles'] = list.xpath("//a/text()").extract()  # 获取标题
+            item['titles'] = list.xpath("//a/text()").extract()  # 获取标题
+            contents = list.xpath("a/@href").extract_first()
+            contents = response.urljoin(contents)
             # item['contents'] = list.xpath("a/@href").extract() #获取内容网址
-            titles = list.xpath("//a/text()").extract()
-            contents = list.xpath("a/@href").extract()
-        print(2)
+            yield scrapy.Request(contents, callback=self.parse_contents)
+            # titles = list.xpath("//a/text()").extract()
+            # contents = list.xpath("a/@href").extract()
+            yield item
+
         next_page = response.xpath(
             "//ul[@class='pagination']//li[@class='move-page '][last()]//a/@href").extract_first()  # 获取下一页网址
         # print(next_page)
         if next_page is not None:
             next_page = response.urljoin(next_page)
             yield scrapy.Request(next_page, callback=self.parse)
+
+
+    def parse_contents(self,response):
+        content = response.xpath("//div[@class='Degas_news_content']//p/text()").extract()
+        print(content)
+
+
+
 
