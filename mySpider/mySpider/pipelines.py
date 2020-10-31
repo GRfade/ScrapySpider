@@ -5,10 +5,25 @@
 
 
 # useful for handling different item types with a single interface
-from itemadapter import ItemAdapter
+# from itemadapter import ItemAdapter
 
 
 class MyspiderPipeline:
     def process_item(self, item, spider):
-        print(item)
+        filename = 'UESTC_NEWS.txt'
+        with open(filename,'a', encoding="utf-8") as f:
+            f.write('title:   ')
+            f.write(str(item['title'][0]))
+            f.write('\n\n')
+            f.write('picture_url:\n')
+            for url in item['picture']:
+                f.write(url)
+                f.write('\n')
+            f.write('\n')
+            f.write('content:\n')
+            for cont in item['content']:
+                f.write(cont)
+                f.write('\n')
+            f.write('\n\n\n\n\n')
+
         return item
